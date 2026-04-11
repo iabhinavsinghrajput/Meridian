@@ -1,0 +1,81 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Pass currentCategory to UI to highlight -->
+<% const categories = ["Trending", "Rooms", "Iconic Cities", "Mountains", "Castles", "Amazing Pools", "Camping", "Farms", "Artic", "Domes", "Boats"]; %>
+<% const icons = ["fa-fire", "fa-bed", "fa-mountain-city", "fa-mountain", "fa-fort-awesome", "fa-person-swimming", "fa-campground", "fa-tractor", "fa-snowflake", "fa-igloo", "fa-ship"] %>
+
+<div id="filters" class="mb-4 d-flex align-items-center flex-wrap justify-content-center gap-4">
+  <% for(let i=0; i < categories.length; i++) { %>
+    <a href="/listings?category=<%= categories[i] %>" class="filter <%= locals.currentCategory === categories[i] ? 'active' : '' %>">
+      <div><i class="fa-solid <%= icons[i] %>"></i></div>
+      <p><%= categories[i] %></p>
+    </a>
+  <% } %>
+
+  <div class="tax-toggle ms-auto me-auto mt-2 mt-md-0">
+    <div class="form-check form-switch m-0 p-0 d-flex align-items-center gap-2">
+      <input class="form-check-input m-0 shadow-none" style="cursor: pointer;" type="checkbox" role="switch" id="switchCheckDefault">
+      <label class="form-check-label mb-1" for="switchCheckDefault" style="cursor: pointer; font-weight:500;">Total after taxes</label>
+    </div>
+  </div>  
+</div>
+
+<% if(allListings.length === 0) { %>
+  <div class="text-center py-5">
+    <img src="https://cdni.iconscout.com/illustration/premium/thumb/empty-state-2130362-1800926.png" width="300" alt="no data" class="mb-3 opacity-75">
+    <h3 class="text-muted fw-bold">No destinations found!</h3>
+    <p class="text-muted">Try adjusting your category or search filter.</p>
+    <a href="/listings" class="btn btn-submit d-inline-block w-auto mx-auto mt-3 border bg-white text-dark shadow-sm">Clear Filters</a>
+  </div>
+<% } else { %>
+  <div class="listing-container">
+    <% for(let listing of allListings) { %>
+      <div class="card listing-card h-100 position-relative">
+        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark d-block h-100">
+          <div class="img-wrapper position-relative">
+            <img src="<%= listing.image.url %>" class="card-img-top listing-img" alt="<%= listing.title %>" loading="lazy"/>
+          </div>
+
+          <div class="card-body listing-content">
+            <h5 class="card-title listing-title text-truncate" title="<%= listing.title %>"><%= listing.title %></h5>
+            <p class="card-text text-muted mb-2">
+              <i class="fa-solid fa-location-dot me-1 text-danger opacity-75"></i> 
+              <%= listing.location %>, <%= listing.country %>
+            </p>
+            <p class="card-text fw-bold mb-0 text-dark">
+              &#8377; <%= listing.price.toLocaleString("en-IN") %> <span class="fw-normal text-muted">/ night</span>
+              <span class="tax-info text-danger small fw-semibold"><i class="fa-solid fa-plus ms-1"></i> 18% GST</span>
+            </p>
+          </div>
+        </a>
+        
+        <!-- Heart Button Independent of Link -->
+        <form action="/profile/save/<%= listing._id %>" method="POST" class="position-absolute top-0 end-0 m-3" style="z-index: 10;">
+          <% 
+            let isSaved = false;
+            if(currUser && currUser.savedListings && currUser.savedListings.includes(listing._id)) {
+              isSaved = true;
+            }
+          %>
+          <button type="submit" class="btn btn-link p-0 border-0 shadow-none text-white toggle-heart" onclick="event.stopPropagation();">
+             <i class="<%= isSaved ? 'fa-solid text-danger' : 'fa-regular' %> fa-heart fs-4" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>
+          </button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+<% } %>
+
+<script>
+  let taxSwitch = document.getElementById('switchCheckDefault');
+  taxSwitch.addEventListener("change", (e) => {
+    let taxInfos = document.querySelectorAll(".tax-info");
+    taxInfos.forEach(info => {
+      if(e.target.checked) {
+        info.style.display = "inline";
+      } else {
+        info.style.display = "none";
+      }
+    });
+  });
+</script>

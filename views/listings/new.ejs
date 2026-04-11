@@ -1,0 +1,90 @@
+<% layout('layouts/boilerplate') %>
+
+<% const categories = ["Trending", "Rooms", "Iconic Cities", "Mountains", "Castles", "Amazing Pools", "Camping", "Farms", "Artic", "Domes", "Boats"]; %>
+
+<div class="container my-5 max-w-3xl mx-auto">
+  <div class="row min-vh-75 align-items-center justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card glass-card border-0 p-5 shadow-lg" style="border-radius: 20px;">
+        <div class="text-center mb-5">
+           <h2 class="fw-bold text-dark">Create New Listing</h2>
+           <p class="text-muted">Earn money by sharing your space with the world</p>
+        </div>
+
+        <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
+          <!-- Title -->
+          <div class="mb-4 form-floating">
+            <input type="text" id="title" placeholder="Enter Title" class="form-control bg-light border-0 shadow-none" name="listing[title]" required />
+            <label for="title" class="text-muted">Catchy Title</label>
+            <div class="invalid-feedback ps-2">Please enter a title.</div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-4 form-floating">
+            <textarea id="description" class="form-control bg-light border-0 shadow-none" placeholder="Enter Description" name="listing[description]" style="height: 120px" required></textarea>
+            <label for="description" class="text-muted">Describe your space</label>
+            <div class="invalid-feedback ps-2">Please enter a description.</div>
+          </div>
+
+          <!-- 2 COLUMN ROW -->
+          <div class="row g-4 mb-4">
+            <!-- Category Menu -->
+            <div class="col-md-4">
+              <div class="form-floating">
+                <select id="category" name="listing[category]" class="form-select bg-light border-0 shadow-none" required>
+                  <option value="" disabled selected>Select...</option>
+                  <% for(let cat of categories) { %>
+                    <option value="<%= cat %>"><%= cat %></option>
+                  <% } %>
+                </select>
+                <label for="category" class="text-muted">Category</label>
+                <div class="invalid-feedback ps-2">Please select a category.</div>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="number" id="price" placeholder="Enter Price" class="form-control bg-light border-0 shadow-none" name="listing[price]" required />
+                <label for="price" class="text-muted">Price per night</label>
+                <div class="invalid-feedback ps-2">Please enter a valid price.</div>
+              </div>
+            </div>
+
+             <!-- Image -->
+             <div class="col-md-4">
+              <div class="form-floating">
+                <input type="file" id="image" class="form-control bg-light border-0 shadow-none pt-4 pb-0 h-100" name="listing[image]" required />
+                <label for="image" class="text-muted pb-0">Upload Image</label>
+                <div class="invalid-feedback ps-2">Please upload a photo.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 COLUMN ROW -->
+          <div class="row g-4 mb-5">
+            <!-- Location -->
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" id="location" placeholder="Enter Location" class="form-control bg-light border-0 shadow-none" name="listing[location]" required />
+                <label for="location" class="text-muted">City / Location</label>
+                <div class="invalid-feedback ps-2">Please enter a location.</div>
+              </div>
+            </div>
+
+            <!-- Country -->
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" id="country" placeholder="Enter Country" class="form-control bg-light border-0 shadow-none" name="listing[country]" required />
+                <label for="country" class="text-muted">Country</label>
+                <div class="invalid-feedback ps-2">Please enter a country.</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-submit py-3 fs-5 rounded-pill w-100 text-white shadow-sm">Host Your Space</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

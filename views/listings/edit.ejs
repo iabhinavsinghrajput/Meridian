@@ -1,0 +1,90 @@
+<% layout('layouts/boilerplate') %>
+<% const categories = ["Trending", "Rooms", "Iconic Cities", "Mountains", "Castles", "Amazing Pools", "Camping", "Farms", "Artic", "Domes", "Boats"]; %>
+
+<div class="container my-5 max-w-3xl mx-auto">
+  <div class="row min-vh-75 align-items-center justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card glass-card border-0 p-5 shadow-lg" style="border-radius: 20px;">
+        <div class="d-flex align-items-center mb-5 border-bottom pb-4">
+           <img src="<%= originalImageUrl %>" class="rounded-circle object-fit-cover shadow-sm me-4" style="width: 80px; height: 80px;" alt="original" />
+           <div>
+             <h2 class="fw-bold text-dark mb-1">Edit Your Listing</h2>
+             <p class="text-muted m-0">Update your property details below</p>
+           </div>
+        </div>
+
+        <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+          <!-- Title -->
+          <div class="mb-4 form-floating">
+            <input type="text" id="title" class="form-control bg-light border-0 shadow-none fw-bold text-dark" name="listing[title]" value="<%= listing.title %>" required />
+            <label for="title" class="text-muted">Listing Title</label>
+            <div class="invalid-feedback ps-2">Please enter a title.</div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-4 form-floating">
+            <textarea id="description" class="form-control bg-light border-0 shadow-none" name="listing[description]" style="height: 120px" required><%= listing.description %></textarea>
+            <label for="description" class="text-muted">Description</label>
+            <div class="invalid-feedback ps-2">Please enter a description.</div>
+          </div>
+
+          <!-- 2 COLUMN ROW -->
+          <div class="row g-4 mb-4">
+             <!-- Category Menu -->
+             <div class="col-md-4">
+              <div class="form-floating">
+                <select id="category" name="listing[category]" class="form-select bg-light border-0 shadow-none" required>
+                  <% for(let cat of categories) { %>
+                    <option value="<%= cat %>" <%= listing.category === cat ? 'selected' : '' %>><%= cat %></option>
+                  <% } %>
+                </select>
+                <label for="category" class="text-muted">Category</label>
+                <div class="invalid-feedback ps-2">Please select a category.</div>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="number" id="price" class="form-control bg-light border-0 shadow-none fw-bold" name="listing[price]" value="<%= listing.price %>" required />
+                <label for="price" class="text-muted">Price per night</label>
+                <div class="invalid-feedback ps-2">Please enter a price.</div>
+              </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="file" id="image" class="form-control bg-light border-0 shadow-none pt-4 pb-0 h-100" name="listing[image]" />
+                <label for="image" class="text-muted pb-0">Update Image (Optional)</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 COLUMN ROW -->
+          <div class="row g-4 mb-5">
+            <!-- Location -->
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" id="location" class="form-control bg-light border-0 shadow-none" name="listing[location]" value="<%= listing.location %>" required />
+                <label for="location" class="text-muted">Location</label>
+                <div class="invalid-feedback ps-2">Please enter a location.</div>
+              </div>
+            </div>
+
+            <!-- Country -->
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" id="country" class="form-control bg-light border-0 shadow-none" name="listing[country]" value="<%= listing.country %>" required />
+                <label for="country" class="text-muted">Country</label>
+                <div class="invalid-feedback ps-2">Please enter a country.</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-submit py-3 fs-5 rounded-pill w-100 text-white shadow-sm mt-3"><i class="fa-solid fa-check-circle me-2"></i> Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

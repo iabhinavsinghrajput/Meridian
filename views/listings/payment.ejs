@@ -1,0 +1,116 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-5 mb-5 pt-4" style="max-width: 800px;">
+  <h1 class="fw-bold mb-4">Confirm and Pay</h1>
+  
+  <div class="row">
+    <!-- Left Column: Payment Mock Details -->
+    <div class="col-md-7 mb-4 pe-md-4">
+      <div class="card glass-card p-4 rounded-4 border shadow-sm">
+        <h4 class="fw-bold mb-4">Your Trip</h4>
+        
+        <div class="d-flex justify-content-between mb-3">
+          <div>
+            <h6 class="fw-bold mb-1">Dates</h6>
+            <p class="text-muted small m-0"><%= new Date(checkin).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %> - <%= new Date(checkout).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %></p>
+          </div>
+          <div>
+            <a href="/listings/<%= listing._id %>" class="text-dark fw-semibold text-decoration-underline small">Edit</a>
+          </div>
+        </div>
+
+        <hr class="border-secondary my-4">
+
+        <h4 class="fw-bold mb-4">Payment Method</h4>
+        <p class="text-muted small mb-4">Select your preferred UPI provider to complete the reservation securely.</p>
+
+        <form action="/listings/<%= listing._id %>/book" method="POST" id="payment-form">
+          <input type="hidden" name="checkin" value="<%= checkin %>">
+          <input type="hidden" name="checkout" value="<%= checkout %>">
+          <input type="hidden" name="totalPrice" value="<%= totalPrice %>">
+          <input type="hidden" name="downpayment" value="<%= downpayment %>">
+          
+          <div class="mb-4">
+            <!-- Mock Payment Options -->
+            <div class="form-check border rounded p-3 mb-2 bg-light d-flex align-items-center">
+              <input class="form-check-input mt-0 me-3 shadow-none" type="radio" name="paymentMethod" id="paytm" value="Paytm" checked style="transform: scale(1.2);">
+              <label class="form-check-label w-100 fw-bold m-0 d-flex justify-content-between align-items-center" for="paytm" style="cursor: pointer;">
+                <span>Paytm UPI</span>
+                <span class="badge bg-primary text-white rounded-pill px-3">UPI</span>
+              </label>
+            </div>
+            
+            <div class="form-check border rounded p-3 mb-2 bg-light d-flex align-items-center">
+              <input class="form-check-input mt-0 me-3 shadow-none" type="radio" name="paymentMethod" id="gpay" value="GPay" style="transform: scale(1.2);">
+              <label class="form-check-label w-100 fw-bold m-0 d-flex justify-content-between align-items-center" for="gpay" style="cursor: pointer;">
+                <span>Google Pay (GPay)</span>
+                <span class="badge bg-success text-white rounded-pill px-3">UPI</span>
+              </label>
+            </div>
+            
+            <div class="form-check border rounded p-3 mb-2 bg-light d-flex align-items-center">
+              <input class="form-check-input mt-0 me-3 shadow-none" type="radio" name="paymentMethod" id="phonepe" value="PhonePe" style="transform: scale(1.2);">
+              <label class="form-check-label w-100 fw-bold m-0 d-flex justify-content-between align-items-center" for="phonepe" style="cursor: pointer;">
+                <span>PhonePe</span>
+                <span class="badge" style="background-color: #5f259f; color: white;">UPI</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-submit rounded-pill w-100 fs-5 py-3 text-white shadow-sm fw-bold" id="pay-btn" onclick="simulatePayment(event)">Pay ₹<%= downpayment.toLocaleString("en-IN") %> & Reserve</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Column: Listing & Price summary -->
+    
+<script>
+  function simulatePayment(event) {
+    event.preventDefault();
+    const btn = document.getElementById('pay-btn');
+    const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+    
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing with ${selectedMethod}...`;
+    btn.classList.add('disabled');
+    
+    // Simulate processing delay heavily requested
+    setTimeout(() => {
+      document.getElementById('payment-form').submit();
+    }, 1500);
+  }
+</script>
+    <div class="col-md-5">
+      <div class="card show-card px-3 py-4 shadow-sm border rounded-4 position-sticky" style="top: 100px;">
+        <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+          <img src="<%= listing.image.url %>" alt="listing_image" class="rounded object-fit-cover shadow-sm me-3" style="width: 100px; height: 100px;">
+          <div>
+            <p class="small text-muted mb-0">Entire home</p>
+            <h6 class="fw-bold m-0"><%= listing.title %></h6>
+            <div class="small fw-semibold mt-1">
+              <i class="fa-solid fa-star text-warning"></i> 5.0 (New)
+            </div>
+          </div>
+        </div>
+
+        <h5 class="fw-bold mb-3">Price details</h5>
+        <div class="d-flex justify-content-between text-muted mb-2">
+          <span>₹<%= listing.price.toLocaleString("en-IN") %> x <%= diffDays %> <%= diffDays === 1 ? 'night' : 'nights' %></span>
+          <span>₹<%= totalPrice.toLocaleString("en-IN") %></span>
+        </div>
+        <hr class="border-secondary my-3">
+        <div class="d-flex justify-content-between fw-bold text-dark fs-5">
+          <span>Total (INR)</span>
+          <span>₹<%= totalPrice.toLocaleString("en-IN") %></span>
+        </div>
+        
+        <div class="mt-4 p-3 rounded bg-light border border-warning" style="background: rgba(255,183,3, 0.1) !important;">
+          <div class="d-flex justify-content-between fw-bold text-dark mb-1">
+            <span>Due Now (30%)</span>
+            <span class="text-primary">₹<%= downpayment.toLocaleString("en-IN") %></span>
+          </div>
+          <p class="small text-muted m-0">The remaining amount is typically paid closer to the check-in date or at the property.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

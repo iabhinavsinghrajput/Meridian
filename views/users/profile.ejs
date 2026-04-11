@@ -1,0 +1,160 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-5 profile-container">
+  <div class="row">
+    <!-- User Info Sidebar -->
+    <div class="col-md-4 mb-4">
+      <div class="card profile-card glass-card text-center">
+        <div class="card-body">
+          <div class="avatar-placeholder mb-3">
+            <i class="fa-solid fa-user-circle fa-5x"></i>
+          </div>
+          <h3 class="card-title"><%= currUser.username %></h3>
+          <p class="text-muted"><%= currUser.email %></p>
+          <hr>
+          <div class="d-flex justify-content-around stats">
+            <div>
+              <h5 class="fw-bold"><%= listings.length %></h5>
+              <small>Listings</small>
+            </div>
+            <div>
+              <h5 class="fw-bold"><%= savedListings.length %></h5>
+              <small>Saved</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Content -->
+    <div class="col-md-8">
+      <ul class="nav nav-pills profile-tabs mb-4 gap-2" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="pills-listings-tab" data-bs-toggle="pill" data-bs-target="#pills-listings" type="button" role="tab" aria-controls="pills-listings" aria-selected="true">My Listings</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-reservations-tab" data-bs-toggle="pill" data-bs-target="#pills-reservations" type="button" role="tab" aria-controls="pills-reservations" aria-selected="false"><i class="fa-solid fa-plane-arrival me-2"></i>My Reservations</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-saved-tab" data-bs-toggle="pill" data-bs-target="#pills-saved" type="button" role="tab" aria-controls="pills-saved" aria-selected="false"><i class="fa-solid fa-heart me-2"></i>Wishlist</button>
+        </li>
+      </ul>
+      <div class="tab-content" id="pills-tabContent">
+        <!-- Listings Tab -->
+        <div class="tab-pane fade show active" id="pills-listings" role="tabpanel" aria-labelledby="pills-listings-tab">
+          <% if(listings.length > 0) { %>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+              <% for(let listing of listings) { %>
+                <div class="col">
+                  <div class="card listing-card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                    <img src="<%= listing.image.url %>" class="card-img-top listing-img" alt="<%= listing.title %>" style="height: 200px; object-fit: cover;">
+                    <div class="card-body p-4 d-flex flex-column">
+                      <h5 class="card-title fw-bold text-dark"><%= listing.title %></h5>
+                      <p class="listing-price mb-3 text-primary fw-semibold">
+                        &#8377; <%= listing.price.toLocaleString("en-IN") %> <small class="text-muted fw-normal">/ night</small>
+                      </p>
+                      <a href="/listings/<%= listing._id %>" class="btn btn-dark w-100 rounded-pill mt-auto shadow-sm">View Listing</a>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          <% } else { %>
+            <div class="empty-state p-5 bg-white text-center rounded-4 shadow-sm border border-light">
+              <i class="fa-solid fa-house mb-3 text-muted fs-1"></i>
+              <h5 class="fw-bold">You haven't created any listings yet.</h5>
+              <a href="/listings/new" class="btn btn-dark mt-3 rounded-pill px-4 py-2 text-white">Create new listing</a>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Saved/Wishlist Tab -->
+        <div class="tab-pane fade" id="pills-saved" role="tabpanel" aria-labelledby="pills-saved-tab">
+          <% if(savedListings && savedListings.length > 0) { %>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+              <% for(let listing of savedListings) { %>
+                <div class="col">
+                  <div class="card listing-card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                    <img src="<%= listing.image.url %>" class="card-img-top listing-img" alt="<%= listing.title %>" style="height: 200px; object-fit: cover;">
+                    <div class="card-body p-4 d-flex flex-column">
+                      <h5 class="card-title fw-bold text-dark"><%= listing.title %></h5>
+                      <p class="listing-price mb-3 text-primary fw-semibold">
+                        &#8377; <%= listing.price.toLocaleString("en-IN") %> <small class="text-muted fw-normal">/ night</small>
+                      </p>
+                      <div class="d-flex gap-2 mt-auto">
+                        <a href="/listings/<%= listing._id %>" class="btn btn-primary rounded-pill flex-grow-1 shadow-sm">Book Now</a>
+                        <form action="/profile/save/<%= listing._id %>" method="POST" class="m-0">
+                           <button class="btn btn-outline-danger rounded-circle shadow-sm" title="Remove"><i class="fa-solid fa-heart-crack"></i></button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          <% } else { %>
+            <div class="empty-state p-5 bg-white text-center rounded-4 shadow-sm border border-light">
+              <i class="fa-regular fa-heart mb-3 text-muted fs-1"></i>
+              <h5 class="fw-bold">Your wishlist is empty.</h5>
+              <a href="/listings" class="btn btn-primary mt-3 rounded-pill px-4 py-2 shadow-sm">Explore Destinations</a>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Reservations Tab -->
+        <div class="tab-pane fade" id="pills-reservations" role="tabpanel" aria-labelledby="pills-reservations-tab">
+          <% if(userReservations && userReservations.length > 0) { %>
+            <div class="row row-cols-1 g-4">
+              <% for(let res of userReservations) { %>
+                <div class="col">
+                  <div class="card reservation-beauty-card shadow-sm border-0 rounded-4 overflow-hidden h-100">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <img src="<%= res.listing.image.url %>" class="img-fluid h-100 w-100 object-fit-cover" alt="<%= res.listing.title %>" style="min-height: 200px;">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body p-4">
+                          <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                              <h5 class="card-title fw-bold mb-1 text-dark fs-4"><%= res.listing.title %></h5>
+                              <p class="text-muted small mb-0"><i class="fa-solid fa-location-dot me-1 text-danger"></i> <%= res.listing.location %>, <%= res.listing.country %></p>
+                            </div>
+                            <span class="badge bg-success-subtle text-success border border-success border-opacity-25 py-2 px-3 rounded-pill fw-bold">
+                              <i class="fa-solid fa-check-circle me-1"></i> Reserved
+                            </span>
+                          </div>
+                          
+                          <div class="booking-dates-box p-3 rounded-3 bg-light border border-light-subtle mb-0">
+                            <div class="row text-center">
+                              <div class="col-5">
+                                <span class="d-block small text-muted fw-bold mb-1">CHECK-IN</span>
+                                <span class="fw-bold text-dark"><%= new Date(res.checkIn).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %></span>
+                              </div>
+                              <div class="col-2 d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-arrow-right text-muted"></i>
+                              </div>
+                              <div class="col-5">
+                                <span class="d-block small text-muted fw-bold mb-1">CHECK-OUT</span>
+                                <span class="fw-bold text-dark"><%= new Date(res.checkOut).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %></span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          <% } else { %>
+            <div class="empty-state p-5 bg-white text-center rounded shadow-sm border border-light">
+              <i class="fa-regular fa-calendar-xmark mb-3 text-muted fs-1"></i>
+              <h5>You have no upcoming reservations.</h5>
+              <a href="/listings" class="btn btn-primary mt-3 rounded-pill px-4 py-2">Find your next stay</a>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

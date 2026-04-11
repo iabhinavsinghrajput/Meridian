@@ -1,0 +1,30 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container my-5 pb-5">
+  <div class="row min-vh-50 align-items-center justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+      <div class="card glass-card border-0 p-5 shadow-lg text-center" style="border-radius: 24px;">
+        <i class="fa-solid fa-plane-departure fs-1 mb-3" style="color: var(--primary-color);"></i>
+        <h2 class="fw-bold text-dark mb-2">Welcome Back</h2>
+        <p class="text-muted mb-4 pb-2">Log in to Meridian to continue</p>
+        
+        <form action="/login" method="POST" class="needs-validation text-start" novalidate>
+          <div class="mb-4 form-floating">
+            <input type="text" id="username" name="username" class="form-control bg-light border-0 shadow-none" placeholder="Username" required />
+            <label for="username" class="text-muted"><i class="fa-regular fa-user me-2"></i> Username</label>
+            <div class="invalid-feedback ps-2">Please enter your username.</div>
+          </div>
+
+          <div class="mb-4 form-floating">
+            <input type="password" id="password" name="password" class="form-control bg-light border-0 shadow-none" placeholder="Password" required />
+            <label for="password" class="text-muted"><i class="fa-solid fa-lock me-2"></i> Password</label>
+            <div class="invalid-feedback ps-2">Please enter your password.</div>
+          </div>
+
+          <button class="btn btn-submit py-3 fs-5 rounded-pill w-100 text-white shadow-sm mt-2 mb-3">Login</button>
+          <p class="text-muted text-center mt-3">Don't have an account? <a href="/signup" class="fw-bold">Sign up</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
