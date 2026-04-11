@@ -110,4 +110,4 @@ Distributed under the ISC License.
 
 ---
 
-**Developed with ❤️ by [Abhinav Singh Rajput](https://github.com/iabhinavsinghrajput)**
+**Developed with ❤️ by [Abhinav Kumar](https://github.com/iabhinavsinghrajput)**
