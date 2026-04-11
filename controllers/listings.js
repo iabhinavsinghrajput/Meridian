@@ -1,4 +1,4 @@
-const Listing = require("../models/listing");
+const Listing = require("../models/listing");  //
 const Reservation = require("../models/reservation");
 
 
@@ -143,4 +143,4 @@ module.exports.createReservation = async (req, res) => {
 
     req.flash("success", "Your seat is reserve!");
     res.redirect(`/profile`);
-};
+};
