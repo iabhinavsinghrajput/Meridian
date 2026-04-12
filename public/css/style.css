@@ -58,6 +58,26 @@ body::before {
   border-color: var(--primary-color) !important;
 }
 
+/* Authentication Input Styling (Rounded & Modern) */
+.glass-card .form-control.auth-input {
+  border-radius: 12px !important;
+  border: 1px solid #ccd0d5 !important;
+  padding: 14px 16px !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+  font-size: 17px;
+  color: #1c1e21;
+  transition: all 0.3s ease;
+}
+
+.glass-card .form-control.auth-input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2) !important;
+  outline: none;
+}
+
+
+
 html, body {
   height: 100%;
   width: 100%;

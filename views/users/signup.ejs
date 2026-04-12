@@ -10,21 +10,21 @@
         
         <form action="/signup" method="POST" class="needs-validation text-start" novalidate>
           <div class="row">
-            <div class="col-md-12 mb-4 form-floating">
-              <input type="text" id="username" name="username" class="form-control bg-light border-0 shadow-none" placeholder="Username" required />
-              <label for="username" class="text-muted ms-2"><i class="fa-regular fa-user me-2"></i> Username</label>
+            <div class="col-md-12 mb-4">
+              <label for="username" class="form-label text-muted d-block mb-2 ms-1"><i class="fa-regular fa-user me-2"></i> Username</label>
+              <input type="text" id="username" name="username" class="form-control auth-input" placeholder="Username" required />
               <div class="invalid-feedback ps-2">Please enter a unique username.</div>
             </div>
             
-            <div class="col-md-12 mb-4 form-floating">
-              <input type="email" id="email" name="email" class="form-control bg-light border-0 shadow-none" placeholder="Email" required />
-              <label for="email" class="text-muted ms-2"><i class="fa-regular fa-envelope me-2"></i> Email Address</label>
+            <div class="col-md-12 mb-4">
+              <label for="email" class="form-label text-muted d-block mb-2 ms-1"><i class="fa-regular fa-envelope me-2"></i> Email Address</label>
+              <input type="email" id="email" name="email" class="form-control auth-input" placeholder="Email" required />
               <div class="invalid-feedback ps-2">Please enter a valid email.</div>
             </div>
 
-            <div class="col-md-12 mb-4 form-floating">
-              <input type="password" id="password" name="password" class="form-control bg-light border-0 shadow-none" placeholder="Password" required />
-              <label for="password" class="text-muted ms-2"><i class="fa-solid fa-lock me-2"></i> Create Password</label>
+            <div class="col-md-12 mb-4">
+              <label for="password" class="form-label text-muted d-block mb-2 ms-1"><i class="fa-solid fa-lock me-2"></i> Create Password</label>
+              <input type="password" id="password" name="password" class="form-control auth-input" placeholder="Password" required />
               <div class="invalid-feedback ps-2">Please enter a password.</div>
             </div>
           </div>
