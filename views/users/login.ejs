@@ -2,30 +2,29 @@
 
 <div class="container my-5 pb-5">
   <div class="row min-vh-50 align-items-center justify-content-center mt-5">
-    <div class="col-md-7 col-lg-6">
-      <div class="card glass-card border-0 p-5 shadow-lg text-center" style="border-radius: 24px;">
+    <div class="col-md-6 col-lg-5 col-xl-4">
+      <div class="card glass-card border-0 p-4 p-md-5 shadow-lg text-center" style="border-radius: 28px;">
         <i class="fa-solid fa-plane-departure fs-1 mb-3" style="color: var(--primary-color);"></i>
-        <h2 class="fw-bold text-dark mb-2">Welcome Back</h2>
-        <p class="text-muted mb-4 pb-2">Log in to Meridian to continue</p>
+        <h2 class="fw-bold text-dark mb-1">Welcome Back</h2>
+        <p class="text-muted mb-4">Log in to Meridian to continue</p>
         
         <form action="/login" method="POST" class="needs-validation text-start" novalidate>
-          <div class="row">
-            <div class="col-md-12 mb-4">
-              <label for="username" class="form-label text-muted d-block mb-2 ms-1"><i class="fa-regular fa-user me-2"></i> Username</label>
-              <input type="text" id="username" name="username" class="form-control auth-input" placeholder="Username" required />
-              <div class="invalid-feedback ps-2">Please enter your username.</div>
-            </div>
-  
-            <div class="col-md-12 mb-4">
-              <label for="password" class="form-label text-muted d-block mb-2 ms-1"><i class="fa-solid fa-lock me-2"></i> Password</label>
-              <input type="password" id="password" name="password" class="form-control auth-input" placeholder="Password" required />
-              <div class="invalid-feedback ps-2">Please enter your password.</div>
-            </div>
+          <div class="mb-3">
+            <input type="text" id="username" name="username" class="form-control auth-input" placeholder="Username" required />
+            <div class="invalid-feedback ps-2">Please enter your username.</div>
+          </div>
+
+          <div class="mb-4">
+            <input type="password" id="password" name="password" class="form-control auth-input" placeholder="Password" required />
+            <div class="invalid-feedback ps-2">Please enter your password.</div>
           </div>
 
           <button class="btn btn-submit py-3 fs-5 rounded-pill w-100 text-white shadow-sm mt-2 mb-3">Login</button>
-          <p class="text-muted text-center mt-3">Don't have an account? <a href="/signup" class="fw-bold">Sign up</a></p>
+          <p class="text-muted text-center mt-3 small">Don't have an account? <a href="/signup" class="fw-bold">Sign up</a></p>
         </form>
+      </div>
+    </div>
+  </div>
       </div>
     </div>
   </div>

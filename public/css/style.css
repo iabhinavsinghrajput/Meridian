@@ -46,34 +46,43 @@ body::before {
 
 /* Unified Form Controls for Glass Cards */
 .glass-card .form-control, .glass-card .form-select {
-  background-color: rgba(255, 255, 255, 0.6) !important;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.7) !important;
-  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card .form-control:focus, .glass-card .form-select:focus {
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.15) !important;
+  box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.1) !important;
   border-color: var(--primary-color) !important;
 }
 
-/* Authentication Input Styling (Rounded & Modern) */
-.glass-card .form-control.auth-input {
-  border-radius: 12px !important;
-  border: 1px solid #ccd0d5 !important;
-  padding: 14px 16px !important;
-  background-color: #ffffff !important;
-  box-shadow: none !important;
-  font-size: 17px;
-  color: #1c1e21;
-  transition: all 0.3s ease;
+/* Authentication Input Styling (Sleek & Modern) */
+.glass-card .form-control.auth-input, .glass-card .form-select.auth-input {
+  border-radius: 16px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  padding: 12px 20px !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+  font-size: 16px;
+  color: var(--text-dark);
 }
 
-.glass-card .form-control.auth-input:focus {
+.glass-card .form-control.auth-input:focus, .glass-card .form-select.auth-input:focus {
   border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2) !important;
-  outline: none;
+  background-color: #fff !important;
+  box-shadow: 0 4px 20px rgba(0, 180, 216, 0.12) !important;
+  transform: translateY(-1px);
+}
+
+.glass-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
 }
 
 
@@ -120,14 +129,24 @@ a:hover {
   transform: translateZ(0); /* Hardware acceleration */
 }
 
+.brand-text {
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+.logo-link:hover .brand-text {
+  color: var(--primary-dark) !important;
+}
+
 .fa-compass {
   color: var(--primary-color);
   font-size: 2.2rem;
-  transition: transform 0.4s ease;
+  transition: all 0.4s ease;
 }
 
-.navbar-brand:hover .fa-compass {
+.logo-link:hover .fa-compass {
   transform: rotate(45deg);
+  color: var(--primary-dark);
 }
 
 .nav-link {
@@ -164,32 +183,39 @@ a:hover {
 }
 
 .search-inp {
-  border-radius: 30px;
-  padding: 0.6rem 1.2rem;
-  border: 1px solid #ddd;
-  width: 280px;
-  background-color: #fff;
-  transition: all 0.3s ease;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+  border-radius: 50px !important;
+  padding: 0.7rem 1.5rem !important;
+  padding-right: 6.5rem !important; /* Space for absolute button */
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  width: 320px; /* Fixed stable width */
+  background-color: #fff !important;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
 }
 
 .search-inp:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.1);
-  width: 320px;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 8px 25px rgba(0, 180, 216, 0.15) !important;
 }
 
 .search-btn {
-  background-color: var(--primary-color);
-  color: #fff;
-  border: none;
-  border-radius: 30px;
-  padding: 0.6rem 1.4rem;
-  font-weight: 500;
-  margin-left: -50px;
-  z-index: 2;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  position: absolute;
+  right: 6px;
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 50px !important;
+  padding: 0.45rem 1.4rem !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+
+.search-btn:hover {
+  background-color: var(--primary-dark) !important;
+  color: #fff !important;
+  transform: scale(1.03);
 }
 
 .search-btn:hover {
@@ -338,32 +364,64 @@ a:hover {
 
 /* ====== SHOW PAGE (Detail) ====== */
 .show-title {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 2.2rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.8rem;
   color: var(--text-dark);
+  letter-spacing: -0.5px;
 }
 
 .hero-img {
   width: 100%;
   height: 500px;
   object-fit: cover;
-  border-radius: 20px;
-  box-shadow: var(--card-shadow);
-  margin-bottom: 2rem;
+  border-radius: 28px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2.5rem;
+  transition: transform 0.3s ease;
+}
+
+.hero-img:hover {
+  transform: scale(1.005);
 }
 
 .show-card {
   background: #fff;
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: var(--card-shadow);
+  border-radius: 24px !important;
+  padding: 1.5rem;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.07) !important;
   margin-bottom: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
 .show-card hr {
-  border-color: #eee;
+  border-color: rgba(0, 0, 0, 0.05);
   margin: 1.5rem 0;
+}
+
+.host-avatar {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 180, 216, 0.2);
+}
+
+.review-card {
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  background: #fff !important;
+  transition: all 0.3s ease;
+}
+
+.review-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05) !important;
+  transform: translateY(-2px);
 }
 
 .edit-btn {
@@ -508,41 +566,61 @@ a:hover {
 
 /* ====== CUSTOM DATE INPUTS ====== */
 .date-input-group {
-  border: 1px solid #e0e0e0 !important;
-  background-color: #fff !important;
-  transition: box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  background-color: rgba(0, 0, 0, 0.02) !important;
+  border-radius: 20px !important;
+  transition: all 0.3s ease;
 }
 
 .date-input-group:focus-within {
-  box-shadow: 0 0 0 1px var(--primary-color), 0 4px 12px rgba(0,0,0,0.05);
-  border-color: var(--primary-color) !important;
+  background-color: #fff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+  border-color: rgba(0, 180, 216, 0.2) !important;
 }
 
 .custom-date-input {
-  border: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
   background: #ffffff !important;
-  padding: 0.8rem 1rem !important;
-  border-radius: 12px !important;
-  color: #1a1a1a !important;
+  padding: 1rem 1.5rem !important; /* Increased padding for better fit */
+  border-radius: 50px !important;
+  color: var(--text-dark) !important;
   font-family: inherit;
   font-weight: 600;
   width: 100%;
-  font-size: 0.95rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  font-size: 1rem; /* Full size for maximum clarity */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
   cursor: pointer;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .custom-date-input:focus {
-  background: #fff !important;
-  box-shadow: 0 0 0 2px var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.12) !important;
   outline: none;
+  background-color: #fff !important;
+  transform: translateY(-2px);
 }
 
 /* Make placeholder/text more visible */
 .custom-date-input::-webkit-datetime-edit {
-  color: #1a1a1a;
+  color: var(--text-dark);
   text-transform: uppercase;
-  font-size: 0.85rem;
+}
+
+/* Custom placeholder logic for date inputs */
+.custom-date-input:not(:focus):not(:valid)::-webkit-datetime-edit {
+  color: transparent !important;
+}
+
+.custom-date-input:not(:focus):not(:valid):before {
+  content: "DD-MM-YYYY";
+  color: #adb5bd;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  font-weight: 500;
 }
 
 /* Hide native arrows if possible for cleaner look */
@@ -557,10 +635,10 @@ a:hover {
 
 /* Responsive Maps */
 #map {
-  height: 400px;
-  width: 100%;
-  border-radius: 16px;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  background-color: #f8f9fa; /* Consistent fallback background */
 }
 
 /* ====== MOBILE BOTTOM NAV ====== */
@@ -594,9 +672,90 @@ a:hover {
   color: var(--primary-color);
 }
 
+@media (max-width: 991px) {
+  .search-inp {
+    width: 250px;
+  }
+}
+
 @media (max-width: 767px) {
   body {
     padding-bottom: 70px !important;
+  }
+
+  .navbar {
+    min-height: 4rem;
+  }
+
+  .navbar-brand .fa-compass {
+    font-size: 1.8rem;
+  }
+
+  .search-form {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .search-inp {
+    width: 100% !important;
+  }
+
+  .show-title {
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+  }
+
+  .hero-img {
+    height: 300px !important;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .show-card {
+    position: static !important;
+    padding: 1rem;
+    margin-top: 0;
+  }
+
+  #map {
+    height: 300px !important;
+  }
+
+  .listing-container {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 0 1rem;
+  }
+
+  #filters {
+    gap: 1.2rem;
+    padding: 1rem 1.2rem;
+  }
+
+  .tax-toggle {
+    width: 100%;
+    justify-content: center;
+    margin: 10px 0;
+  }
+
+  .profile-tabs .nav-link {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .listing-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .show-title {
+    font-size: 1.4rem;
+  }
+
+  .hero-img {
+    height: 250px !important;
   }
 }
 

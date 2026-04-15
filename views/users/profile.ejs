@@ -4,22 +4,22 @@
   <div class="row">
     <!-- User Info Sidebar -->
     <div class="col-md-4 mb-4">
-      <div class="card profile-card glass-card text-center">
+      <div class="card profile-card glass-card text-center shadow-lg border-0 rounded-4 p-3">
         <div class="card-body">
-          <div class="avatar-placeholder mb-3">
-            <i class="fa-solid fa-user-circle fa-5x"></i>
+          <div class="host-avatar mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+            <%= currUser.username.charAt(0).toUpperCase() %>
           </div>
-          <h3 class="card-title"><%= currUser.username %></h3>
-          <p class="text-muted"><%= currUser.email %></p>
-          <hr>
+          <h3 class="card-title fw-bold text-dark"><%= currUser.username %></h3>
+          <p class="text-muted small"><%= currUser.email %></p>
+          <hr class="opacity-10 my-4">
           <div class="d-flex justify-content-around stats">
             <div>
-              <h5 class="fw-bold"><%= listings.length %></h5>
-              <small>Listings</small>
+              <h5 class="fw-bold mb-0 text-dark"><%= listings.length %></h5>
+              <small class="text-muted">Listings</small>
             </div>
             <div>
-              <h5 class="fw-bold"><%= savedListings.length %></h5>
-              <small>Saved</small>
+              <h5 class="fw-bold mb-0 text-dark"><%= savedListings.length %></h5>
+              <small class="text-muted">Saved</small>
             </div>
           </div>
         </div>
@@ -50,10 +50,10 @@
                     <img src="<%= listing.image.url %>" class="card-img-top listing-img" alt="<%= listing.title %>" style="height: 200px; object-fit: cover;">
                     <div class="card-body p-4 d-flex flex-column">
                       <h5 class="card-title fw-bold text-dark"><%= listing.title %></h5>
-                      <p class="listing-price mb-3 text-primary fw-semibold">
+                      <p class="listing-price mb-3 text-primary fw-semibold small">
                         &#8377; <%= listing.price.toLocaleString("en-IN") %> <small class="text-muted fw-normal">/ night</small>
                       </p>
-                      <a href="/listings/<%= listing._id %>" class="btn btn-dark w-100 rounded-pill mt-auto shadow-sm">View Listing</a>
+                      <a href="/listings/<%= listing._id %>" class="btn btn-dark w-100 rounded-pill mt-auto shadow-sm py-2 fw-bold">View Listing</a>
                     </div>
                   </div>
                 </div>
@@ -78,11 +78,11 @@
                     <img src="<%= listing.image.url %>" class="card-img-top listing-img" alt="<%= listing.title %>" style="height: 200px; object-fit: cover;">
                     <div class="card-body p-4 d-flex flex-column">
                       <h5 class="card-title fw-bold text-dark"><%= listing.title %></h5>
-                      <p class="listing-price mb-3 text-primary fw-semibold">
+                      <p class="listing-price mb-3 text-primary fw-semibold small">
                         &#8377; <%= listing.price.toLocaleString("en-IN") %> <small class="text-muted fw-normal">/ night</small>
                       </p>
                       <div class="d-flex gap-2 mt-auto">
-                        <a href="/listings/<%= listing._id %>" class="btn btn-primary rounded-pill flex-grow-1 shadow-sm">Book Now</a>
+                        <a href="/listings/<%= listing._id %>" class="btn btn-primary rounded-pill flex-grow-1 shadow-sm fw-bold">Book Now</a>
                         <form action="/profile/save/<%= listing._id %>" method="POST" class="m-0">
                            <button class="btn btn-outline-danger rounded-circle shadow-sm" title="Remove"><i class="fa-solid fa-heart-crack"></i></button>
                         </form>

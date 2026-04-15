@@ -96,9 +96,10 @@
         deleteForms.forEach(form => {
           form.addEventListener('submit', function(e) {
             e.preventDefault();
+            const itemType = this.getAttribute('data-item-type') || 'item';
             Swal.fire({
               title: 'Are you really sure?',
-              text: "This listing will be permanently removed!",
+              text: `This ${itemType} will be permanently removed!`,
               icon: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#e63946',
