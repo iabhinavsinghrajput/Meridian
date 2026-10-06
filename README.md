@@ -19,7 +19,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stacks
 
 ### Backend
 - **Node.js**: Runtime environment
