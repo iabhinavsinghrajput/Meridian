@@ -154,7 +154,26 @@
             </div>
           <% } %>
         </div>
-      </div>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tab = urlParams.get('tab');
+    if (tab === 'reservations') {
+      const targetTab = document.getElementById('pills-reservations-tab');
+      if (targetTab) {
+        const tabTrigger = new bootstrap.Tab(targetTab);
+        tabTrigger.show();
+      }
+    } else if (tab === 'saved') {
+      const targetTab = document.getElementById('pills-saved-tab');
+      if (targetTab) {
+        const tabTrigger = new bootstrap.Tab(targetTab);
+        tabTrigger.show();
+      }
+    }
+  });
+</script>

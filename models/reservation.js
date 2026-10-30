@@ -33,6 +33,10 @@ const reservationSchema = new Schema({
     enum: ["Pending", "Reserved"],
     default: "Reserved"
   },
+  paymentMethod: {
+    type: String,
+    default: "UPI"
+  },
   createdAt: {
     type: Date,
     default: Date.now

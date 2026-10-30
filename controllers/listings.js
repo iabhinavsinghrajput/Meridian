@@ -121,7 +121,7 @@ module.exports.renderPaymentPage = async (req, res) => {
 
 module.exports.createReservation = async (req, res) => {
     let { id } = req.params;
-    let { checkin, checkout, totalPrice, downpayment } = req.body;
+    let { checkin, checkout, totalPrice, downpayment, paymentMethod } = req.body;
 
     const listing = await Listing.findById(id);
     if (!listing) {
@@ -136,11 +136,12 @@ module.exports.createReservation = async (req, res) => {
         checkOut: new Date(checkout),
         totalPrice: Number(totalPrice),
         downpayment: Number(downpayment),
+        paymentMethod: paymentMethod || "UPI",
         status: "Reserved"
     });
 
     await newReservation.save();
 
-    req.flash("success", "Your seat is reserve!");
-    res.redirect(`/profile`);
+    req.flash("success", `Reservation Confirmed! Your stay at "${listing.title}" is successfully reserved.`);
+    res.redirect(`/listings/${id}`);
 };

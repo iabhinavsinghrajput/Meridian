@@ -1,28 +1,70 @@
 <% layout('layouts/boilerplate') %>
 
-<div class="container mt-2 mb-5" style="max-width: 800px;">
-  <h1 class="fw-bold mb-4">Confirm and Pay</h1>
+<style>
+  .payment-option-card {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: 1.5px solid #e9ecef !important;
+  }
+  .payment-option-card:hover {
+    border-color: #adb5bd !important;
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+  }
+  .payment-option-card.selected-method {
+    border-color: var(--primary-color, #e63946) !important;
+    background-color: rgba(230, 57, 70, 0.04) !important;
+    box-shadow: 0 4px 14px rgba(230, 57, 70, 0.12) !important;
+  }
+  .payment-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+  .qr-box {
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    display: inline-block;
+  }
+</style>
+
+<div class="container mt-2 mb-5" style="max-width: 850px;">
+  <div class="d-flex align-items-center mb-4">
+    <a href="/listings/<%= listing._id %>" class="btn btn-outline-secondary btn-sm rounded-circle me-3 shadow-none" title="Back to listing">
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+    <h1 class="fw-bold m-0 fs-2">Confirm and Pay</h1>
+  </div>
   
   <div class="row">
-    <!-- Left Column: Payment Mock Details -->
+    <!-- Left Column: Payment Details -->
     <div class="col-md-7 mb-4 pe-md-4">
       <div class="card glass-card p-4 rounded-4 border shadow-sm">
-        <h4 class="fw-bold mb-4">Your Trip</h4>
+        <h4 class="fw-bold mb-3">Your Trip</h4>
         
-        <div class="d-flex justify-content-between mb-3">
+        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 bg-light border mb-4">
           <div>
-            <h6 class="fw-bold mb-1">Dates</h6>
-            <p class="text-muted small m-0"><%= new Date(checkin).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %> - <%= new Date(checkout).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %></p>
+            <h6 class="fw-bold mb-1"><i class="fa-regular fa-calendar me-2 text-danger"></i>Dates</h6>
+            <p class="text-muted small m-0">
+              <%= new Date(checkin).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %> &ndash; <%= new Date(checkout).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %>
+              <span class="badge bg-secondary-subtle text-secondary ms-2"><%= diffDays %> <%= diffDays === 1 ? 'night' : 'nights' %></span>
+            </p>
           </div>
           <div>
             <a href="/listings/<%= listing._id %>" class="text-dark fw-semibold text-decoration-underline small">Edit</a>
           </div>
         </div>
 
-        <hr class="border-secondary my-4">
+        <hr class="border-secondary my-4" style="opacity: 0.15;">
 
-        <h4 class="fw-bold mb-4">Payment Method</h4>
-        <p class="text-muted small mb-4">Select your preferred UPI provider to complete the reservation securely.</p>
+        <h4 class="fw-bold mb-2">Payment Method</h4>
+        <p class="text-muted small mb-4">Choose a payment mode below. Clicking <strong>Reserve & Pay</strong> will open your QR code to complete the transaction.</p>
 
         <form action="/listings/<%= listing._id %>/book" method="POST" id="payment-form">
           <input type="hidden" name="checkin" value="<%= checkin %>">
@@ -30,64 +72,97 @@
           <input type="hidden" name="totalPrice" value="<%= totalPrice %>">
           <input type="hidden" name="downpayment" value="<%= downpayment %>">
           
-          <div class="mb-4">
-            <!-- Mock Payment Options -->
-            <div class="form-check border rounded p-3 mb-2 bg-light d-flex align-items-center">
-              <input class="form-check-input mt-0 me-3 shadow-none" type="radio" name="paymentMethod" id="paytm" value="Paytm" checked style="transform: scale(1.2);">
-              <label class="form-check-label w-100 fw-bold m-0 d-flex justify-content-between align-items-center" for="paytm" style="cursor: pointer;">
-                <span>Paytm UPI</span>
-                <span class="badge bg-primary text-white rounded-pill px-3">UPI</span>
-              </label>
-            </div>
-            
-            <div class="form-check border rounded p-3 mb-2 bg-light d-flex align-items-center">
-              <input class="form-check-input mt-0 me-3 shadow-none" type="radio" name="paymentMethod" id="gpay" value="GPay" style="transform: scale(1.2);">
-              <label class="form-check-label w-100 fw-bold m-0 d-flex justify-content-between align-items-center" for="gpay" style="cursor: pointer;">
-                <span>Google Pay (GPay)</span>
-                <span class="badge bg-success text-white rounded-pill px-3">UPI</span>
-              </label>
-            </div>
-            
-            <div class="form-check border rounded p-3 mb-2 bg-light d-flex align-items-center">
+          <div class="mb-4 payment-options-group">
+            <!-- Payment Option 1: UPI QR Code -->
+            <label class="payment-option-card rounded-4 p-3 mb-3 d-flex align-items-center selected-method" for="upi-qr">
+              <input class="form-check-input mt-0 me-3 shadow-none" type="radio" name="paymentMethod" id="upi-qr" value="UPI QR Code" checked style="transform: scale(1.2);">
+              <div class="w-100 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <div class="payment-icon-box bg-dark text-white me-3">
+                    <i class="fa-solid fa-qrcode"></i>
+                  </div>
+                  <div>
+                    <span class="fw-bold d-block text-dark">UPI QR Code</span>
+                    <small class="text-muted">Instant scan & pay via any UPI app</small>
+                  </div>
+                </div>
+                <span class="badge bg-dark rounded-pill px-3 py-2">Scan & Pay</span>
+              </div>
+            </label>
+
+            <!-- Payment Option 2: Google Pay -->
+            <label class="payment-option-card rounded-4 p-3 mb-3 d-flex align-items-center" for="gpay">
+              <input class="form-check-input mt-0 me-3 shadow-none" type="radio" name="paymentMethod" id="gpay" value="Google Pay (GPay)" style="transform: scale(1.2);">
+              <div class="w-100 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <div class="payment-icon-box bg-success-subtle text-success me-3">
+                    <i class="fa-brands fa-google-pay fs-4"></i>
+                  </div>
+                  <div>
+                    <span class="fw-bold d-block text-dark">Google Pay</span>
+                    <small class="text-muted">Pay securely with GPay UPI</small>
+                  </div>
+                </div>
+                <span class="badge bg-success text-white rounded-pill px-3 py-2">GPay</span>
+              </div>
+            </label>
+
+            <!-- Payment Option 3: PhonePe -->
+            <label class="payment-option-card rounded-4 p-3 mb-3 d-flex align-items-center" for="phonepe">
               <input class="form-check-input mt-0 me-3 shadow-none" type="radio" name="paymentMethod" id="phonepe" value="PhonePe" style="transform: scale(1.2);">
-              <label class="form-check-label w-100 fw-bold m-0 d-flex justify-content-between align-items-center" for="phonepe" style="cursor: pointer;">
-                <span>PhonePe</span>
-                <span class="badge" style="background-color: #5f259f; color: white;">UPI</span>
-              </label>
-            </div>
+              <div class="w-100 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <div class="payment-icon-box text-white me-3" style="background-color: #5f259f;">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                  </div>
+                  <div>
+                    <span class="fw-bold d-block text-dark">PhonePe</span>
+                    <small class="text-muted">Pay via PhonePe QR / UPI</small>
+                  </div>
+                </div>
+                <span class="badge rounded-pill px-3 py-2 text-white" style="background-color: #5f259f;">PhonePe</span>
+              </div>
+            </label>
+
+            <!-- Payment Option 4: Paytm -->
+            <label class="payment-option-card rounded-4 p-3 mb-3 d-flex align-items-center" for="paytm">
+              <input class="form-check-input mt-0 me-3 shadow-none" type="radio" name="paymentMethod" id="paytm" value="Paytm" style="transform: scale(1.2);">
+              <div class="w-100 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <div class="payment-icon-box bg-primary-subtle text-primary me-3">
+                    <i class="fa-solid fa-wallet"></i>
+                  </div>
+                  <div>
+                    <span class="fw-bold d-block text-dark">Paytm UPI</span>
+                    <small class="text-muted">Pay via Paytm Wallet / UPI</small>
+                  </div>
+                </div>
+                <span class="badge bg-primary text-white rounded-pill px-3 py-2">Paytm</span>
+              </div>
+            </label>
           </div>
 
-          <button type="submit" class="btn btn-submit rounded-pill w-100 fs-5 py-3 text-white shadow-sm fw-bold" id="pay-btn" onclick="simulatePayment(event)">Pay ₹<%= downpayment.toLocaleString("en-IN") %> & Reserve</button>
+          <button type="button" class="btn btn-submit rounded-pill w-100 fs-5 py-3 text-white shadow-sm fw-bold d-flex align-items-center justify-content-center gap-2" id="open-qr-btn" onclick="openQrModal()">
+            <i class="fa-solid fa-lock fs-6"></i> Reserve & Pay ₹<%= downpayment.toLocaleString("en-IN") %>
+          </button>
+          
+          <div class="text-center mt-3">
+            <small class="text-muted"><i class="fa-solid fa-shield-check text-success me-1"></i> End-to-end encrypted 256-bit secure reservation</small>
+          </div>
         </form>
       </div>
     </div>
 
     <!-- Right Column: Listing & Price summary -->
-    
-<script>
-  function simulatePayment(event) {
-    event.preventDefault();
-    const btn = document.getElementById('pay-btn');
-    const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-    
-    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing with ${selectedMethod}...`;
-    btn.classList.add('disabled');
-    
-    // Simulate processing delay heavily requested
-    setTimeout(() => {
-      document.getElementById('payment-form').submit();
-    }, 1500);
-  }
-</script>
     <div class="col-md-5">
       <div class="card show-card px-3 py-4 shadow-sm border rounded-4 position-sticky" style="top: 100px;">
         <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
-          <img src="<%= listing.image.url %>" alt="listing_image" class="rounded object-fit-cover shadow-sm me-3" style="width: 100px; height: 100px;">
+          <img src="<%= listing.image.url %>" alt="listing_image" class="rounded-3 object-fit-cover shadow-sm me-3" style="width: 100px; height: 100px;">
           <div>
-            <p class="small text-muted mb-0">Entire home</p>
+            <p class="small text-muted mb-0"><i class="fa-solid fa-location-dot text-danger me-1"></i><%= listing.location %></p>
             <h6 class="fw-bold m-0"><%= listing.title %></h6>
             <div class="small fw-semibold mt-1">
-              <i class="fa-solid fa-star text-warning"></i> 5.0 (New)
+              <i class="fa-solid fa-star text-warning"></i> 5.0 (Top Rated)
             </div>
           </div>
         </div>
@@ -97,20 +172,209 @@
           <span>₹<%= listing.price.toLocaleString("en-IN") %> x <%= diffDays %> <%= diffDays === 1 ? 'night' : 'nights' %></span>
           <span>₹<%= totalPrice.toLocaleString("en-IN") %></span>
         </div>
-        <hr class="border-secondary my-3">
+        <hr class="border-secondary my-3" style="opacity: 0.15;">
         <div class="d-flex justify-content-between fw-bold text-dark fs-5">
-          <span>Total (INR)</span>
+          <span>Total Stay Amount</span>
           <span>₹<%= totalPrice.toLocaleString("en-IN") %></span>
         </div>
         
-        <div class="mt-4 p-3 rounded bg-light border border-warning" style="background: rgba(255,183,3, 0.1) !important;">
+        <div class="mt-4 p-3 rounded-4 bg-light border border-warning" style="background: rgba(255,183,3, 0.08) !important;">
           <div class="d-flex justify-content-between fw-bold text-dark mb-1">
-            <span>Due Now (30%)</span>
-            <span class="text-primary">₹<%= downpayment.toLocaleString("en-IN") %></span>
+            <span>Due Now (30% Advance)</span>
+            <span class="text-primary fs-5">₹<%= downpayment.toLocaleString("en-IN") %></span>
           </div>
-          <p class="small text-muted m-0">The remaining amount is typically paid closer to the check-in date or at the property.</p>
+          <p class="small text-muted m-0">Pay 30% advance now to confirm your reservation. Pay the remainder at check-in.</p>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- ============================================== -->
+<!-- QR Code Payment Modal -->
+<!-- ============================================== -->
+<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+    <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
+      <!-- Modal Header -->
+      <div class="modal-header border-bottom bg-light px-4 py-3">
+        <div class="d-flex align-items-center">
+          <div class="badge bg-success-subtle text-success p-2 rounded-circle me-2">
+            <i class="fa-solid fa-shield-halved fs-5"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold m-0" id="qrModalLabel">UPI Payment</h5>
+            <small class="text-muted">Meridian Verified Merchant</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close" id="qr-modal-close-btn"></button>
+      </div>
+
+      <!-- Main Modal Content -->
+      <div class="modal-body p-4 text-center" id="qr-modal-main">
+        <!-- Amount & Method Box -->
+        <div class="p-3 bg-light rounded-4 mb-3 d-flex justify-content-between align-items-center border">
+          <div class="text-start">
+            <small class="text-muted d-block text-uppercase fw-bold" style="letter-spacing: 0.5px; font-size: 0.7rem;">Payment Mode</small>
+            <span class="fw-bold text-dark small" id="display-payment-method">UPI QR Code</span>
+          </div>
+          <div class="text-end">
+            <small class="text-muted d-block text-uppercase fw-bold" style="letter-spacing: 0.5px; font-size: 0.7rem;">Amount Due</small>
+            <span class="fs-5 fw-bold text-success">₹<%= downpayment.toLocaleString("en-IN") %></span>
+          </div>
+        </div>
+
+        <!-- QR Code Wrapper -->
+        <div class="qr-box p-3 rounded-4 border shadow-sm my-2">
+          <img id="qr-image" 
+               src="/images/qr-code.png" 
+               onerror="if (this.src.endsWith('/images/qr-code.png')) { this.src = '/images/qr-code.jpg'; } else if (this.src.endsWith('/images/qr-code.jpg')) { this.src = '/images/qr-code.jpeg'; } else { this.onerror = null; this.src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=upi%3A%2F%2Fpay%3Fpa%3Dmeridian%40upi%26pn%3DMeridian%26am%3D<%= downpayment %>%26cu%3DINR'; }" 
+               alt="Payment QR Code" 
+               class="rounded-3" 
+               style="width: 210px; height: 210px; object-fit: contain; display: block; margin: 0 auto;" />
+          <div class="small fw-semibold text-muted mt-2">
+            <i class="fa-solid fa-camera me-1"></i> Scan with any UPI app to pay
+          </div>
+        </div>
+
+        <!-- Supported UPI Apps Badges -->
+        <div class="d-flex justify-content-center align-items-center gap-2 my-3 flex-wrap">
+          <span class="badge bg-white text-dark border shadow-xs px-2 py-1"><i class="fa-brands fa-google-pay text-success me-1"></i> GPay</span>
+          <span class="badge bg-white text-dark border shadow-xs px-2 py-1"><i class="fa-solid fa-mobile-screen-button text-primary me-1"></i> PhonePe</span>
+          <span class="badge bg-white text-dark border shadow-xs px-2 py-1"><i class="fa-solid fa-wallet text-info me-1"></i> Paytm</span>
+          <span class="badge bg-white text-dark border shadow-xs px-2 py-1"><i class="fa-solid fa-building-columns text-secondary me-1"></i> BHIM</span>
+        </div>
+
+        <!-- UPI ID Row with Copy button -->
+        <div class="d-flex align-items-center justify-content-between p-2 px-3 rounded-3 bg-light border mb-2">
+          <small class="text-muted mb-0">UPI ID: <strong class="text-dark">meridian@upi</strong></small>
+          <button type="button" class="btn btn-sm btn-outline-dark rounded-pill py-0 px-2" style="font-size: 0.75rem;" onclick="copyUpiId(this)">
+            <i class="fa-regular fa-copy me-1"></i> Copy
+          </button>
+        </div>
+
+        <!-- Expiry Timer -->
+        <div class="text-muted small my-2">
+          <i class="fa-regular fa-clock me-1 text-danger"></i> QR code valid for: <span id="timer" class="fw-bold text-danger">05:00</span>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-3">
+          <button type="button" class="btn btn-success rounded-pill w-100 py-3 fw-bold fs-5 shadow-sm" id="confirm-payment-btn" onclick="verifyAndSubmitPayment()">
+            I Have Paid ₹<%= downpayment.toLocaleString("en-IN") %> <i class="fa-solid fa-circle-check ms-1"></i>
+          </button>
+          <small class="text-muted d-block mt-2" style="font-size: 0.75rem;">Click after completing payment on your device</small>
+        </div>
+      </div>
+
+      <!-- Processing & Verification Screen (Initially Hidden) -->
+      <div class="modal-body p-5 text-center d-none" id="qr-verification-screen">
+        <div id="status-animation-container" class="mb-4">
+          <div class="spinner-border text-success" role="status" style="width: 3.5rem; height: 3.5rem;">
+            <span class="visually-hidden">Verifying...</span>
+          </div>
+        </div>
+        <h4 class="fw-bold text-dark mb-2" id="verification-title">Verifying Payment...</h4>
+        <p class="text-muted small mb-0" id="verification-subtitle">Connecting with bank UPI network to confirm transaction...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let countdownTimer;
+
+  // Highlight selected payment card
+  document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('.payment-option-card').forEach(card => card.classList.remove('selected-method'));
+      radio.closest('.payment-option-card').classList.add('selected-method');
+    });
+  });
+
+  // Open the QR Code Modal
+  function openQrModal() {
+    const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+    const methodName = selectedRadio ? selectedRadio.value : 'UPI';
+    
+    document.getElementById('display-payment-method').innerText = methodName;
+    
+    const qrModalEl = document.getElementById('qrModal');
+    const modalInstance = bootstrap.Modal.getOrCreateInstance(qrModalEl);
+    modalInstance.show();
+    
+    // Reset view states
+    document.getElementById('qr-modal-main').classList.remove('d-none');
+    document.getElementById('qr-verification-screen').classList.add('d-none');
+    document.getElementById('qr-modal-close-btn').disabled = false;
+    
+    // Start countdown timer for 5 minutes (300 seconds)
+    startCountdown(300, document.getElementById('timer'));
+  }
+
+  function startCountdown(duration, display) {
+    clearInterval(countdownTimer);
+    let timer = duration;
+    countdownTimer = setInterval(() => {
+      const minutes = String(Math.floor(timer / 60)).padStart(2, '0');
+      const seconds = String(timer % 60).padStart(2, '0');
+      display.textContent = `${minutes}:${seconds}`;
+
+      if (--timer < 0) {
+        clearInterval(countdownTimer);
+        display.textContent = "Expired";
+      }
+    }, 1000);
+  }
+
+  function copyUpiId(btn) {
+    navigator.clipboard.writeText('meridian@upi').then(() => {
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check text-success me-1"></i> Copied!';
+      btn.classList.add('btn-success', 'text-white');
+      btn.classList.remove('btn-outline-dark');
+      setTimeout(() => {
+        btn.innerHTML = originalHtml;
+        btn.classList.remove('btn-success', 'text-white');
+        btn.classList.add('btn-outline-dark');
+      }, 2000);
+    });
+  }
+
+  // Verification & submission flow
+  function verifyAndSubmitPayment() {
+    clearInterval(countdownTimer);
+    
+    // Lock modal from accidental closing
+    document.getElementById('qr-modal-close-btn').disabled = true;
+    
+    // Switch to verification view
+    document.getElementById('qr-modal-main').classList.add('d-none');
+    const screen = document.getElementById('qr-verification-screen');
+    screen.classList.remove('d-none');
+    
+    const title = document.getElementById('verification-title');
+    const subtitle = document.getElementById('verification-subtitle');
+    const animContainer = document.getElementById('status-animation-container');
+    
+    title.innerText = "Verifying Payment...";
+    subtitle.innerText = "Connecting with bank UPI network to confirm transaction...";
+    
+    // Step 2: Show verified checkmark after 1.8 seconds
+    setTimeout(() => {
+      animContainer.innerHTML = `
+        <div class="d-inline-flex p-3 rounded-circle bg-success-subtle mb-2">
+          <i class="fa-solid fa-circle-check text-success" style="font-size: 3.5rem;"></i>
+        </div>
+      `;
+      title.innerText = "Payment Verified!";
+      title.classList.add('text-success');
+      subtitle.innerText = "Reservation confirmed! Redirecting you now...";
+      
+      // Step 3: Automatically submit form to create reservation and redirect to the listing (subject)
+      setTimeout(() => {
+        document.getElementById('payment-form').submit();
+      }, 1200);
+    }, 1800);
+  }
+</script>
