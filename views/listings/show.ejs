@@ -1,8 +1,5 @@
 <% layout('layouts/boilerplate') %>
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-
 <div class="container mt-4 mb-5 pt-3" style="max-width: 1050px; margin: auto;">
   <!-- Title and Header info -->
   <div class="mb-4">
@@ -53,12 +50,6 @@
       <div class="desc fs-5 text-dark mb-5" style="line-height: 1.8; font-weight: 300;">
         <%= listing.description %>
       </div>
-
-      <hr class="my-5" style="opacity: 0.05;">
-
-      <!-- Interactive Map (Leaflet) -->
-      <h4 class="fw-bold mb-4 ms-1">Where you'll be</h4>
-      <div id="map" class="mb-5 rounded-4 shadow-sm border" style="height: 400px; z-index: 1; border: 1px solid rgba(0,0,0,0.05) !important;"></div>
     </div>
 
     <!-- Right Column: Price Card widget -->
@@ -190,10 +181,8 @@
   </div>
 </div>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-  document.addEventListener('DOMContentLoaded', async () => {
+  document.addEventListener('DOMContentLoaded', () => {
     // --- Reservation Calculator Logic ---
     const checkin = document.getElementById('checkin');
     const checkout = document.getElementById('checkout');
@@ -225,44 +214,5 @@
     };
     checkin.addEventListener('change', calculateTotal);
     checkout.addEventListener('change', calculateTotal);
-
-    // --- Basic Leaflet Map Init ---
-    let mapElement = document.getElementById('map');
-    if (mapElement) {
-        const map = L.map('map', {
-            scrollWheelZoom: false, // Prevents accidental zooming while scrolling the page
-            zoomControl: true
-        }).setView([20.5937, 78.9629], 2); 
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Fix rendering issues in case container was hidden or flexed
-        const fixMapSize = () => { map.invalidateSize(); };
-        setTimeout(fixMapSize, 100);
-        setTimeout(fixMapSize, 1000);
-
-        // Geocode the location
-        const address = `<%= listing.location %>, <%= listing.country %>`;
-        const geocode = async () => {
-            try {
-                const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
-                const results = await resp.json();
-                
-                if(results && results.length > 0) {
-                    const { lat, lon } = results[0];
-                    L.marker([lat, lon]).addTo(map)
-                        .bindPopup(`<h6 class="fw-bold"><%= listing.title %></h6><p class="small m-0">${address}</p>`)
-                        .openPopup();
-                    map.setView([lat, lon], 13); // Zoom into neighborhood level
-                }
-            } catch(e) {
-                console.error("Geocoding failed:", e);
-            }
-        };
-        geocode();
-    }
   });
 </script>

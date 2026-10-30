@@ -633,13 +633,6 @@ a:hover {
   opacity: 1;
 }
 
-/* Responsive Maps */
-#map {
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
-  background-color: #f8f9fa; /* Consistent fallback background */
-}
 
 /* ====== MOBILE BOTTOM NAV ====== */
 .bottom-nav {
@@ -717,9 +710,6 @@ a:hover {
     margin-top: 0;
   }
 
-  #map {
-    height: 300px !important;
-  }
 
   .listing-container {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
